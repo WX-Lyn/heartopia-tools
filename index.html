@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>心動小鎮｜今日橡木・螢石</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;color:#25372b;background:#f4f7f0;}
+    *{box-sizing:border-box}
+    body{margin:0;padding:clamp(18px,5vw,40px);min-height:100vh;background:radial-gradient(circle at top right,#deebe0 0,transparent 46%),#f4f7f0}
+    main{max-width:590px;margin:0 auto}
+    .eyebrow{color:#67806b;font-weight:750;font-size:12px;letter-spacing:.14em}
+    h1{font-size:clamp(26px,6vw,34px);line-height:1.25;margin:10px 0 8px;letter-spacing:-.025em}
+    .subtitle{color:#687969;font-size:14px;line-height:1.6;margin:0}
+    .date{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:30px 0 15px;flex-wrap:wrap}
+    .date-text{font-size:18px;font-weight:750}
+    .stamp{padding:6px 10px;border-radius:999px;background:#e4ede1;color:#466a4a;font-size:12px;font-weight:700}
+    .cards{display:grid;gap:13px}
+    .card{background:#fff;border:1px solid #e2eade;border-radius:22px;padding:22px 24px;box-shadow:0 5px 18px rgba(55,85,65,.04)}
+    .card-top{display:flex;gap:9px;align-items:center;color:#567260;font-size:14px;font-weight:700}
+    .mark{width:30px;height:30px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:#e9f1e6;color:#3f7654;font-size:17px}
+    .rock .mark{background:#ecedf6;color:#606e9a}
+    .place{font-size:clamp(27px,6.6vw,38px);font-weight:850;line-height:1.26;letter-spacing:-.045em;margin:15px 0 4px;word-break:break-word}
+    .hint{color:#89968b;font-size:13px;min-height:19px}
+    .next{margin-top:22px;padding:17px 20px;border:1px solid #dbe5d8;border-radius:18px;background:#eef4eb}
+    .next-title{font-size:13px;font-weight:800;color:#617662;margin-bottom:9px}
+    .next-content{display:grid;gap:5px;font-size:14px;color:#405641}
+    .next-content strong{font-weight:800;color:#263d2b}
+    details{margin-top:20px;padding:16px 0;border-bottom:1px solid #dce6d9;color:#536853}
+    summary{font-size:14px;font-weight:750;cursor:pointer}
+    .custom{display:flex;gap:10px;margin:14px 0 0;align-items:center;flex-wrap:wrap}
+    input[type=date]{min-height:43px;padding:8px 10px;border-radius:11px;border:1px solid #cbd9c9;background:#fff;font:inherit;font-size:15px;color:#334f39;max-width:100%}
+    button{min-height:42px;padding:8px 14px;border:0;border-radius:11px;background:#386c4a;color:white;font:inherit;font-weight:700;cursor:pointer}
+    .footnote{font-size:12px;line-height:1.75;color:#7b8a7e;margin:20px 0 10px}
+    .footnote a{color:#54745b}
+    .warning{font-size:13px;color:#9d6934;margin:10px 0 0}
+    @media(prefers-reduced-motion:no-preference){button:hover{background:#295c3c}}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">HEARTOPIA · 每日資源位置</div>
+    <h1>心動小鎮<br>今天去哪裡採？</h1>
+    <p class="subtitle">開啟檔案就會自動顯示位置，不用網路、不用 Excel。</p>
+    <div class="date"><span class="date-text" id="dateText">讀取日期中……</span><span class="stamp" id="stamp">台灣時間 · 06:00 更新</span></div>
+    <div class="cards" aria-live="polite">
+      <section class="card wood"><div class="card-top"><span class="mark" aria-hidden="true">♧</span>溜溜橡木</div><div class="place" id="wood">—</div><div class="hint" id="woodHint"></div></section>
+      <section class="card rock"><div class="card-top"><span class="mark" aria-hidden="true">◇</span>無暇螢石</div><div class="place" id="ore">—</div><div class="hint" id="oreHint"></div></section>
+    </div>
+    <section class="next"><div class="next-title" id="nextTitle">明天的位置</div><div class="next-content" id="nextContent"></div></section>
+    <details><summary>想查其他日期？</summary><div class="custom"><input type="date" id="dateInput" aria-label="選擇要查看的日期"><button type="button" id="todayBtn">回到今天</button></div></details>
+    <p class="warning" id="warning" hidden></p>
+    <p class="footnote">依玩家整理的<strong> 50 天循環</strong>推算，位置不會線上更新；若遊戲改版調整輪替，舊表可能失準。遊戲每日於<strong>台灣時間 06:00</strong>刷新，因此 06:00 前顯示前一個遊戲日。<br>參考：<a href="https://www.taptap.cn/moment/842830320188262927" target="_blank" rel="noopener">2026/8/29 玩家紀錄</a>、<a href="https://www.taptap.cn/moment/850259461057546323" target="_blank" rel="noopener">2026/9/19 玩家紀錄</a>。</p>
+  </main>
+  <script>
+    'use strict';
+    // 玩家逐日紀錄：2026/08/29 ~ 2026/10/17，共 50 個日期。每筆為 [橡木, 螢石]。
+    // 數字 = 幾號家園；「原」= 各資源的原始地點。
+    const points = [[12,"原"],["原",8],[2,5],[1,4],[10,11],[5,"原"],[11,8],[4,8],[7,2],[3,2],["原",2],[3,1],[5,1],[12,4],[2,8],[8,4],[4,1],[8,"原"],[6,8],[8,8],[12,6],[10,2],[7,2],[12,"原"],[8,5],[6,11],[11,11],[2,2],[9,12],[3,4],[6,11],[2,7],[11,9],["原",4],["原",4],[11,7],[9,5],[10,3],[3,7],[6,7],[9,1],[4,5],[10,9],["原",11],[7,6],[6,2],[11,2],[2,3],[12,12],[4,11]];
+    const DAY_MS = 86400000;
+    const origin = Date.UTC(2026, 7, 29);
+    const weekdays = ['日','一','二','三','四','五','六'];
+    let chosenDate = null;
+
+    function taipeiNow() {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',
+        hour:'2-digit',minute:'2-digit',hourCycle:'h23'
+      }).formatToParts(new Date());
+      const get = name => +parts.find(p => p.type === name).value;
+      return { y:get('year'), m:get('month'), d:get('day'), hour:get('hour'), minute:get('minute') };
+    }
+    function dateUTC(y,m,d) { return new Date(Date.UTC(y,m-1,d)); }
+    function iso(date) { return date.toISOString().slice(0,10); }
+    function titleFor(date) {return `${date.getUTCFullYear()}/${String(date.getUTCMonth()+1).padStart(2,'0')}/${String(date.getUTCDate()).padStart(2,'0')}（${weekdays[date.getUTCDay()]}）`;}
+    function cycleIndex(date) {const elapsed = Math.round((date.getTime()-origin)/DAY_MS);return ((elapsed % 50)+50)%50;}
+    function currentDates() {
+      const t = taipeiNow();
+      const wallDate = dateUTC(t.y,t.m,t.d);
+      const gameDate = new Date(wallDate.getTime() - (t.hour < 6 ? DAY_MS : 0));
+      return {t,wallDate,gameDate};
+    }
+    function formatPlace(point, type) {
+      if (point === '原') return type==='wood' ? '靈橡松林' : '溫泉山遺跡';
+      return `${point} 號家園門口`;
+    }
+    function setText(id, content) {document.getElementById(id).textContent = content;}
+    function render() {
+      const {t,gameDate} = currentDates();
+      const date = chosenDate ? new Date(`${chosenDate}T00:00:00Z`) : gameDate;
+      const point = points[cycleIndex(date)];
+      const isToday = !chosenDate;
+      setText('dateText',(isToday?'今天｜':'查詢｜')+titleFor(date));
+      setText('stamp',isToday && t.hour < 6 ? '06:00 前 · 顯示前一遊戲日' : '台灣時間 · 06:00 刷新');
+      setText('wood',formatPlace(point[0],'wood'));
+      setText('ore',formatPlace(point[1],'ore'));
+      setText('woodHint',point[0]==='原'?'橡木原始位置':'前往地圖上的家園區');
+      setText('oreHint',point[1]==='原'?'螢石原始位置':'前往地圖上的家園區');
+      const tomorrow = new Date(date.getTime()+DAY_MS);
+      const nextPoint=points[cycleIndex(tomorrow)];
+      setText('nextTitle',(isToday?'下一個遊戲日':'隔天')+'｜'+titleFor(tomorrow));
+      const next=document.getElementById('nextContent');
+      next.replaceChildren();
+      for(const [label,value] of [['橡木',formatPlace(nextPoint[0],'wood')],['螢石',formatPlace(nextPoint[1],'ore')]]) {
+        const line=document.createElement('div');
+        const strong=document.createElement('strong');strong.textContent=label+'：';
+        line.append(strong,document.createTextNode(value));
+        next.append(line);
+      }
+    }
+    document.getElementById('dateInput').addEventListener('change', e=>{
+      chosenDate = e.target.value||null;
+      render();
+    });
+    document.getElementById('todayBtn').addEventListener('click', ()=>{
+      chosenDate=null;
+      document.getElementById('dateInput').value='';
+      render();
+    });
+    render();
+    setInterval(()=>{if(!chosenDate)render()},60000);
+  </script>
+</body>
+</html>
