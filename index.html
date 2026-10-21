@@ -42,7 +42,7 @@
   <main>
     <div class="eyebrow">HEARTOPIA · 每日資源位置</div>
     <h1>心動小鎮<br>今天去哪裡採？</h1>
-    <p class="subtitle">開啟檔案就會自動顯示位置，不用網路、不用 Excel。</p>
+    <p class="subtitle">開啟檔案就會顯示今日位置。</p>
     <div class="date"><span class="date-text" id="dateText">讀取日期中……</span><span class="stamp" id="stamp">台灣時間 · 06:00 更新</span></div>
     <div class="cards" aria-live="polite">
       <section class="card wood"><div class="card-top"><span class="mark" aria-hidden="true">♧</span>溜溜橡木</div><div class="place" id="wood">—</div><div class="hint" id="woodHint"></div></section>
@@ -92,7 +92,7 @@
       const point = points[cycleIndex(date)];
       const isToday = !chosenDate;
       setText('dateText',(isToday?'今天｜':'查詢｜')+titleFor(date));
-      setText('stamp',isToday && t.hour < 6 ? '06:00 前 · 顯示前一遊戲日' : '台灣時間 · 06:00 刷新');
+      setText('stamp','台灣時間 06:00 刷新');
       setText('wood',formatPlace(point[0],'wood'));
       setText('ore',formatPlace(point[1],'ore'));
       setText('woodHint',point[0]==='原'?'橡木原始位置':'前往地圖上的家園區');
